@@ -23,28 +23,18 @@ import { useForm } from "react-hook-form";
 import { signUpSchema } from "@/validators/auth";
 import appLogo from "@/assets/fire-safety-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 type Input = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [contactNo, setContactNo] = useState("");
-  const [streetName, setStreetName] = useState("");
-  const [barangay, setBarangay] = useState("");
-  const [city, setCity] = useState("");
-
   const form = useForm<Input>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
-      contactNumber: "",
+      contactNo: "",
       streetName: "",
       barangay: "",
       city: "",
@@ -54,21 +44,13 @@ export default function SignUp() {
   });
 
   async function onSubmit() {
-    const formData = {
-      firstName: firstName,
-      lastName: lastName,
-      contactNo: contactNo,
-      streetName: streetName,
-      barangay: barangay,
-      city: city,
-      email: email,
-      password: password,
-    };
+    const formData = form.getValues();
+    formData.contactNo = String(parseInt(formData.contactNo, 10));
 
     console.log(formData);
 
     try {
-      const req = await fetch("http://localhost:3000/api/user/login", {
+      const req = await fetch("http://localhost:3000/api/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -77,6 +59,7 @@ export default function SignUp() {
       });
 
       const res = await req.json();
+      console.log(res);
       console.log(res.role);
       if (res.role === "Resident") {
         navigate("/");
@@ -121,8 +104,6 @@ export default function SignUp() {
                         placeholder="Fred"
                         {...field}
                         className="font-normal"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -138,13 +119,7 @@ export default function SignUp() {
                       Last Name
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Bloggs"
-                        {...field}
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
+                      <Input type="text" placeholder="Bloggs" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,20 +127,14 @@ export default function SignUp() {
               />
               <FormField
                 control={form.control}
-                name="contactNumber"
+                name="contactNo"
                 render={({ field }) => (
                   <FormItem className="flex-col justify-start">
                     <FormLabel className="w-full flex h-fit text-[#00274F]">
                       Contact Number
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="09xxxxxxxxx"
-                        {...field}
-                        value={contactNo}
-                        onChange={(e) => setContactNo(e.target.value)}
-                      />
+                      <Input type="text" placeholder="09xxxxxxxxx" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -180,13 +149,7 @@ export default function SignUp() {
                       Street Name
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Main Street"
-                        {...field}
-                        value={streetName}
-                        onChange={(e) => setStreetName(e.target.value)}
-                      />
+                      <Input type="text" placeholder="Main Street" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -202,13 +165,7 @@ export default function SignUp() {
                       Barangay
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Signal"
-                        {...field}
-                        value={barangay}
-                        onChange={(e) => setBarangay(e.target.value)}
-                      />
+                      <Input type="text" placeholder="Signal" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -224,13 +181,7 @@ export default function SignUp() {
                       City
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Your city"
-                        {...field}
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                      />
+                      <Input type="text" placeholder="Your city" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -250,8 +201,6 @@ export default function SignUp() {
                         type="text"
                         placeholder="fredbloggs@gmail.com"
                         {...field}
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -271,8 +220,6 @@ export default function SignUp() {
                         type="password"
                         placeholder="6+ characters"
                         {...field}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />

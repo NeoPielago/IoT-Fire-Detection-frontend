@@ -25,7 +25,8 @@ import appLogo from "@/assets/fire-safety-logo.svg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import Dashboard from "../Resident Dashboard/Dashboard";
+import { AlertCircle, FileWarning, Terminal } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Input = z.infer<typeof loginSchema>;
 
@@ -43,11 +44,10 @@ export default function LoginForm() {
     },
   });
 
+  const [isLoginFailed, setIsLoginFailed] = useState(false);
+
   async function onSubmit() {
-    const formData = {
-      email: email,
-      password: password,
-    };
+    const formData = form.getValues();
 
     console.log(formData);
 
@@ -62,6 +62,15 @@ export default function LoginForm() {
 
       const res = await req.json();
       console.log(res);
+
+      if (res.error) {
+        displayError();
+      }
+
+      function displayError() {
+        setIsLoginFailed(true);
+      }
+
       if (res.role === "Resident") {
         navigate("/");
       }
@@ -75,7 +84,7 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="h-screen grid place-items-center">
+    <div className="h-full grid place-items-center">
       <div>
         <img src={appLogo} alt="app logo" className="w-11/12 mb-8 mx-auto" />
         <Card className="w-[420px]">
@@ -86,6 +95,13 @@ export default function LoginForm() {
             <CardDescription>
               Welcome back! Please enter your details.
             </CardDescription>
+            {isLoginFailed ? (
+              <Alert variant="destructive" className="text-left">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>Incorrect Email or Password</AlertDescription>
+              </Alert>
+            ) : null}
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -106,8 +122,6 @@ export default function LoginForm() {
                           type="text"
                           placeholder="fredbloggs@gmail.com"
                           {...field}
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
                         />
                       </FormControl>
                       <FormMessage />
@@ -127,11 +141,9 @@ export default function LoginForm() {
                           type="password"
                           placeholder="6+ characters"
                           {...field}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage></FormMessage>
                     </FormItem>
                   )}
                 />

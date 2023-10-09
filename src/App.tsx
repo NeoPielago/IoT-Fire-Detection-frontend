@@ -11,7 +11,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div className="h-full grid place-items-center">
+    <div className="h-screen grid place-items-center">
       <Routes>
         <Route path="/" element={<Dashboard />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>

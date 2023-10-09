@@ -24,6 +24,9 @@ import { resetSchema } from "@/validators/auth";
 import { Link } from "react-router-dom";
 import appLogo from "@/assets/fire-safety-logo.svg";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 type Input = z.infer<typeof resetSchema>;
 
 export default function ResetPassword() {
@@ -34,8 +37,29 @@ export default function ResetPassword() {
     },
   });
 
-  function onSubmit(data: Input) {
-    console.log(data);
+  async function onSubmit(data: Input) {
+    const formData = form.getValues();
+
+    console.log(formData);
+
+    try {
+      const req = await fetch("http://localhost:3000/password-reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const res = await req.json();
+      console.log(res);
+      if (res.isSent) {
+        toast.success("Email sent!");
+        console.log(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -77,6 +101,7 @@ export default function ResetPassword() {
               <Button type="submit" className="w-full bg-[#00274F]">
                 Send email
               </Button>
+              <ToastContainer />
               <Link
                 to="/login"
                 className="hover:underline underline-offset-2 text-[#00274F] font-medium text-sm block w-full text-center my-0"
