@@ -63,7 +63,7 @@ export default function ResetPassword() {
   }
 
   return (
-    <div className="h-screen grid place-items-center">
+    <div className="h-full w-screen grid place-items-center">
       <Card className="w-[420px]">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-[#00274F]">

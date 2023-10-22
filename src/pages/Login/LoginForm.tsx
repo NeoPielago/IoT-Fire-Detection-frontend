@@ -84,7 +84,7 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="h-full grid place-items-center">
+    <div className="h-full grid place-items-center w-full">
       <div>
         <img src={appLogo} alt="app logo" className="w-11/12 mb-8 mx-auto" />
         <Card className="w-[420px]">

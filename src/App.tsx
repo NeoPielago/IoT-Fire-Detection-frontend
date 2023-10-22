@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import LoginPage from "./pages/Login/LoginPage";
 import SignUp from "./pages/Signup/SignUp";
@@ -8,10 +7,8 @@ import ForgotPassword from "./pages/Forgot Password/ForgotPassword";
 import AdminDashboard from "./pages/Admin Dashboard/AdminDashboard";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="h-screen grid place-items-center">
+    <div className="h-screen">
       <Routes>
         <Route path="/" element={<Dashboard />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
