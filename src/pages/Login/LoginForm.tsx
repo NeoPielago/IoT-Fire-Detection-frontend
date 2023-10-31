@@ -151,7 +151,7 @@ export default function LoginForm() {
                   Login
                 </Button>
                 <Link
-                  to="/forgot-password"
+                  to="/forgotpassword"
                   className="hover:underline underline-offset-2 text-[#00274F] font-medium text-sm block w-full text-center my-0"
                 >
                   Forgot password
