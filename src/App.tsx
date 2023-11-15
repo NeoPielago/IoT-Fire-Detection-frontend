@@ -1,13 +1,19 @@
 import "./App.css";
 import LoginPage from "./pages/Login/LoginPage";
 import SignUp from "./pages/Signup/SignUp";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, BrowserRouter } from "react-router-dom";
 
 import Dashboard from "./pages/Resident Dashboard/Dashboard";
 import ForgotPassword from "./pages/Forgot Password/ForgotPassword";
 import AdminDashboard from "./pages/Admin Dashboard/AdminDashboard";
 import AlarmHistory from "./pages/Resident Dashboard/AlarmHistory";
 import Devices from "./pages/Resident Dashboard/Devices";
+import Profile from "./pages/Resident Dashboard/Profile";
+
+import { useEffect } from "react";
+import { getToken } from "./utils/getToken";
+import { getSession } from "./utils/getSession";
+import { useNavigate } from "react-router-dom";
 
 const NotFound = () => {
   return (
@@ -40,6 +46,25 @@ const NotFound = () => {
 };
 
 function App() {
+  const navigate = useNavigate();
+  let session;
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const token = getToken();
+        const sessionData = await getSession(token);
+        session = sessionData;
+        if (!sessionData) {
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchSession();
+  }, []);
+
   return (
     <div className="h-screen">
       <Routes>
@@ -54,6 +79,7 @@ function App() {
         ></Route>
         <Route path="/alarmHistory" element={<AlarmHistory />}></Route>
         <Route path="/devices" element={<Devices />}></Route>
+        <Route path="/profile" element={<Profile />}></Route>
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </div>

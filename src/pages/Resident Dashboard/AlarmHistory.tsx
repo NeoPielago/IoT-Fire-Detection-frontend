@@ -1,14 +1,10 @@
 import Header from "@/components/ui/Header";
 import Sidebar from "@/components/ui/Sidebar";
+import { useEffect } from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { getToken } from "@/utils/getToken";
+import { getSession } from "@/utils/getSession";
 
 const AlarmCard = (props: { date: string }) => {
   return (
@@ -34,6 +30,65 @@ const AlarmCard = (props: { date: string }) => {
 //I think you need to create a separate component that will help you generate card components based on the data that you have.
 
 export default function AlarmHistory() {
+  const token = getToken();
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const sessionData = await getSession(token);
+        console.log(sessionData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchAlarmHistory = async () => {
+      const sessionData = await getSession(token);
+      try {
+        //getDevice to extract userID
+        const request = await fetch(
+          "http://localhost:3000/api/user/device/get",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ userId: sessionData?.userId }),
+          }
+        );
+
+        const device = await request.json();
+        console.log(device);
+
+        //fetch for
+
+        const data = {
+          macAddress: device.devices[4].macAddress,
+        };
+
+        const req = await fetch(
+          "http://localhost:3000/api/user/alarm/getHistory",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const res = await req.json();
+        console.log("alarmHistory:", res.alarmHistory[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSession();
+    fetchAlarmHistory();
+  }, []);
+
   return (
     <div className="flex">
       <Sidebar></Sidebar>
@@ -41,19 +96,6 @@ export default function AlarmHistory() {
         <Header title="Alarm History" />
 
         <main className="m-auto w-4/5 mt-6">
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
-          <AlarmCard date="April 02, 2002" />
           <AlarmCard date="April 02, 2002" />
         </main>
       </div>

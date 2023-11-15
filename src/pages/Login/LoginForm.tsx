@@ -25,7 +25,7 @@ import appLogo from "@/assets/fire-safety-logo.svg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertCircle, FileWarning, Terminal } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 type Input = z.infer<typeof loginSchema>;
@@ -61,6 +61,7 @@ export default function LoginForm() {
       });
 
       const res = await req.json();
+      localStorage.setItem("jwt", res.token);
       console.log(res);
 
       if (res.error) {
@@ -162,12 +163,12 @@ export default function LoginForm() {
               </div>
               <p className="text-[#00274F] text-sm">
                 Don't have an account?{" "}
-                <a
-                  href="/signup"
+                <Link
+                  to="/signup"
                   className="hover:underline underline-offset-2 text-[#00274F] font-medium"
                 >
                   Sign up
-                </a>
+                </Link>
               </p>
             </Form>
           </CardContent>

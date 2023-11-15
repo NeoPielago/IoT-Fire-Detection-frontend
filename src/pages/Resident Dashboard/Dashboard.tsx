@@ -13,6 +13,8 @@ import {
 
 import { Line } from "react-chartjs-2";
 Chartjs.register(LineElement, CategoryScale, LinearScale, PointElement);
+import { getSession } from "@/utils/getSession";
+import { getToken } from "@/utils/getToken";
 
 export default function Dashboard() {
   const data = {
